@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="lab2._1.View.CipherView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:lab2._1.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <local:EnumBooleanConverter  x:Key="EnumBooleanConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="21*"/>
+            <ColumnDefinition Width="330*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="10*"/>
+            <ColumnDefinition Width="330*"/>
+            <ColumnDefinition Width="21*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="30*"/>
+            <RowDefinition Height="120*"/>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="21*"/>
+            <RowDefinition Height="150*"/>
+            <RowDefinition Height="21*"/>
+        </Grid.RowDefinitions>
+        <Menu Height="20" VerticalAlignment="Top" Grid.ColumnSpan="6" Margin="0,0,-0.4,0">
+            <MenuItem Header="Файл" FontSize="14">
+                <MenuItem Command="{Binding OpenCommand}" 
+                    Header="Открыть" ></MenuItem>
+                <MenuItem Header="Сохранить" >
+                    <MenuItem Command="{Binding SaveOrigCommand}" 
+                        Header="Исходный текст"></MenuItem>
+                    <MenuItem Command="{Binding SaveCommand}"
+                        Header="Мини отчет" ></MenuItem>
+                    <MenuItem Command="{Binding SaveResultEncodeCommand}"
+                        Header="Результат шифрования" ></MenuItem>
+                    <MenuItem Command="{Binding SaveResultDecodeCommand}"
+                        Header="Результат дешифрования" ></MenuItem>
+                </MenuItem>
+                <Separator />
+                <MenuItem Command="{Binding OpenWindowInformation}"
+                    Header="Информация" ></MenuItem>
+            </MenuItem>
+        </Menu>
+        <TextBox Text="{Binding Path=TextOrig, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+            Grid.Row="2" TextWrapping="Wrap" Grid.RowSpan="2" VerticalScrollBarVisibility="Visible" FontSize="18" Grid.ColumnSpan="3" Margin="23,0.6,10.8,1.6"/>
+        <TextBox  Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Grid.Column="4" Height="30" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18" Margin="0,0.6,0.4,0" Grid.RowSpan="2"/>
+        <GroupBox Grid.Column="4" Header="Алгоритмы"  Grid.Row="2" FontSize="18" Margin="0,30.8,185.4,0.2" Grid.RowSpan="2">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="49*"/>
+                    <RowDefinition Height="49*"/>
+                </Grid.RowDefinitions>
+                <RadioButton GroupName="Algoritmhs" Content="Кузнечик" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" 
+                             IsChecked="{Binding Alg, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Kuznechik}" />
+                <RadioButton IsChecked="{Binding Alg, Mode=TwoWay,  Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Aes}" 
+                GroupName="Algoritmhs" Content="AES" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" FontSize="18" />
+            </Grid>
+        </GroupBox>
+        <Button Command="{Binding GetEncodeResultCommand}"
+            Content="Шифрование" HorizontalAlignment="Left" Grid.Row="4" Width="120" FontSize="18" Grid.ColumnSpan="2" Grid.RowSpan="2" Grid.Column="1" VerticalAlignment="Center"/>
+        <Button Command="{Binding GetDecodeResultCommand}" 
+            Content="Дешифрование" Grid.Column="4" HorizontalAlignment="Left" Grid.Row="4" VerticalAlignment="Center" Width="135" FontSize="18" Grid.RowSpan="2"/>
+        <Button Command="{Binding ClearCommand}" 
+            Content="Очистить" Grid.Column="4" HorizontalAlignment="Right"  Grid.Row="4" VerticalAlignment="Center" Width="80" FontSize="18" Grid.RowSpan="2"/>
+        <TextBox Text="{Binding Path=TextEncode, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+            IsReadOnly="True" Grid.Column="1" Grid.Row="6" TextWrapping="Wrap" FontSize="18" VerticalScrollBarVisibility="Visible"/>
+        <TextBox Text="{Binding Path=TextDecode, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"
+            IsReadOnly="True" Grid.Column="4" Grid.Row="6" TextWrapping="Wrap" FontSize="18" VerticalScrollBarVisibility="Visible"/>
+        <TextBlock HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="Текст: " VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="1" FontSize="18"/>
+        <TextBlock Grid.Column="4" HorizontalAlignment="Left" Grid.Row="1" TextWrapping="Wrap" Text="Ключ:" VerticalAlignment="Bottom" FontSize="18"/>
+        <Button Command="{Binding GetDecodeFromEncodeResultCommand}"
+            Content="Дешифровать ↓" Grid.Column="1" HorizontalAlignment="Right" Grid.Row="4" VerticalAlignment="Center" Width="147" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0,7.8,10.8,8.4"/>
+
+    </Grid>
+</UserControl>
