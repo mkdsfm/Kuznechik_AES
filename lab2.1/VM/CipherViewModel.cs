@@ -150,6 +150,7 @@ namespace lab2._1.VM
         }
         // команда для запуска алгоритма и выведения результата шифрования
         private RelayCommand _getEncodeResultCommand;
+        
         public ICommand GetEncodeResultCommand
         {
             get
@@ -176,7 +177,7 @@ namespace lab2._1.VM
                             try
                             {
                                 string result = algoritmh.Encode(TextOrig, Key);
-                                TextEncode = result;
+                                TextDecode = result;
                             }
                             catch{
                                 dialogService.ShowMessage("Ошибка");

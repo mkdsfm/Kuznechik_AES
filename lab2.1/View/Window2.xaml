@@ -53,7 +53,7 @@
        
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Left" Command="{Binding GetEncodeResultCommand}"  Content="Зашифровать" Width="180" FontSize="18"/>
-            <Button DockPanel.Dock="Right" Command="{Binding GetDecodeFromEncodeResultCommand}" Content="Дешифровать" Width="180"  FontSize="18" HorizontalAlignment="Right"/>
+            <Button DockPanel.Dock="Right" Command="{Binding GetDecodeResultCommand}" Content="Дешифровать" Width="180"  FontSize="18" HorizontalAlignment="Right"/>
         </DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <TextBox Text="{Binding Path=TextDecode, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"  IsReadOnly="True" TextWrapping="Wrap" FontSize="18" VerticalScrollBarVisibility="Visible"/>
