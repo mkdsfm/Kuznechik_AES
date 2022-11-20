@@ -19,7 +19,7 @@ namespace lab2._1
             sb.AppendLine("Год: 2022");
             sb.AppendLine("Описание: Программа для шифрования и дешифрования текста ");
             sb.AppendLine("Поддерживаемые алгоритмы: Кузнечик");
-
+           
             this.text.Text = sb.ToString();
         }
     }
