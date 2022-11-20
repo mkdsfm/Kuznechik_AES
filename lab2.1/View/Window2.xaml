@@ -13,6 +13,9 @@
         <Style TargetType="StackPanel">
             <Setter Property="Margin" Value="3"></Setter>
         </Style>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="2"></Setter>
+        </Style>
     </Window.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
@@ -38,7 +41,7 @@
         </DockPanel>
        
         <DockPanel DockPanel.Dock="Top">
-            <TextBlock DockPanel.Dock="Top" Text="Кузнечик" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <TextBlock DockPanel.Dock="Top" Text="Кузнечик (ГОСТ Р 34.12-2015)" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="Ключ:" FontSize="18"></TextBlock>
                 <TextBox  Text="{Binding Key, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -53,7 +56,10 @@
        
         <DockPanel DockPanel.Dock="Top">
             <Button DockPanel.Dock="Left" Command="{Binding GetEncodeResultCommand}"  Content="Зашифровать" Width="180" FontSize="18"/>
-            <Button DockPanel.Dock="Right" Command="{Binding GetDecodeResultCommand}" Content="Дешифровать" Width="180"  FontSize="18" HorizontalAlignment="Right"/>
+            <Button DockPanel.Dock="Left" Command="{Binding GetDecodeResultCommand}" Content="Дешифровать" Width="180"  FontSize="18" HorizontalAlignment="Right"/>
+            <Button DockPanel.Dock="Right" Command="{Binding ClearCommand}" 
+            Content="Очистить поля" Grid.Column="4"  Grid.Row="4" Width="180" FontSize="18" HorizontalAlignment="Right"/>
+        
         </DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <TextBox Text="{Binding Path=TextDecode, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True"  IsReadOnly="True" TextWrapping="Wrap" FontSize="18" VerticalScrollBarVisibility="Visible"/>
