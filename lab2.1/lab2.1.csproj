@@ -122,6 +122,9 @@
     <Compile Include="View\CipherView.xaml.cs">
       <DependentUpon>CipherView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Window2.xaml.cs">
+      <DependentUpon>Window2.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VM\RelayCommand.cs" />
     <Compile Include="VM\EnumBooleanConverter.cs" />
     <Compile Include="View\InfoWindow.xaml.cs">
@@ -150,6 +153,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Window1.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Window2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

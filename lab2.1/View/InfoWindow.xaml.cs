@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace lab2._1
 {
@@ -22,6 +11,16 @@ namespace lab2._1
         public InfoWindow()
         {
             InitializeComponent();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Информация о программе: ");
+            sb.AppendLine("Автор: Тюлькина Ирина");
+            sb.AppendLine("Группа: 494");
+            sb.AppendLine("Дисциплина: Информационные безопасность");
+            sb.AppendLine("Год: 2022");
+            sb.AppendLine("Описание: Программа для шифрования и дешифрования текста ");
+            sb.AppendLine("Поддерживаемые алгоритмы: Кузнечик");
+
+            this.text.Text = sb.ToString();
         }
     }
 }

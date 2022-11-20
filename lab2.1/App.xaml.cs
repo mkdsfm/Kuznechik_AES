@@ -22,7 +22,7 @@ namespace lab2._1
             var container = builder.Build();
 
             var viewmodel = container.Resolve<CipherViewModel>();
-            var view = new Window1 { DataContext = viewmodel };
+            var view = new Window2 { DataContext = viewmodel };
             view.Show();
         }
     }

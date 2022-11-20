@@ -55,12 +55,8 @@
             <Grid >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="49*"/>
-                    <RowDefinition Height="49*"/>
                 </Grid.RowDefinitions>
-                <RadioButton GroupName="Algoritmhs" Content="Кузнечик" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" 
-                             IsChecked="{Binding Alg, Mode=TwoWay, Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Kuznechik}" />
-                <RadioButton IsChecked="{Binding Alg, Mode=TwoWay,  Converter={StaticResource EnumBooleanConverter}, ConverterParameter=Aes}" 
-                GroupName="Algoritmhs" Content="AES" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" FontSize="18" />
+                
             </Grid>
         </GroupBox>
         <Button Command="{Binding GetEncodeResultCommand}"
