@@ -6,7 +6,7 @@ namespace lab2._1
     {
 
         #region Константы
-        private const int BLOCK_SIZE = 16; // Размер блока 16 байт (или 128 бит)
+        private const int _blockSize = 16; // Размер блока 16 байт (или 128 бит)
         private const int _keySize = 16;
         private const int _countFullCycle = 9;
         private const int _countCycle = 10;
@@ -88,7 +88,7 @@ namespace lab2._1
         // массив для хранения констант из 16 байт
         private readonly byte[][] iter_C = new byte[32][];
         // массив для хранения ключей из 32 байт
-        private readonly byte[][] iter_key = new byte[10][];
+        private readonly byte[][] iter_key = new byte[_countCycle][];
         #endregion
 
         #region Math
@@ -98,8 +98,8 @@ namespace lab2._1
         private byte[] GOST_Kuz_X( byte[] a, byte[] b)
         {
             int i;
-            byte[] c = new byte[BLOCK_SIZE];
-            for (i = 0; i < BLOCK_SIZE; i++)
+            byte[] c = new byte[_blockSize];
+            for (i = 0; i < _blockSize; i++)
                 c[i] = (byte)(a[i] ^ b[i]);
             return c;
         }
@@ -109,7 +109,7 @@ namespace lab2._1
         {
             int i;
             byte[] out_data = new byte[in_data.Length];
-            for (i = 0; i < BLOCK_SIZE; i++)
+            for (i = 0; i < _blockSize; i++)
             {
                 int data = in_data[i];
                 if (data < 0)
@@ -196,7 +196,7 @@ namespace lab2._1
         {
             int i;
             byte[] out_data = new byte[in_data.Length];
-            for (i = 0; i < BLOCK_SIZE; i++)
+            for (i = 0; i < _blockSize; i++)
             {
                 int data = in_data[i];
                 if (data < 0)
@@ -243,7 +243,7 @@ namespace lab2._1
             byte[][] iter_num = new byte[32][];
             for (i = 0; i < 32; i++)
             {
-                for (int j = 0; j < BLOCK_SIZE; j++)
+                for (int j = 0; j < _blockSize; j++)
                 {
                     iter_num[i] = new byte[16];
                     iter_num[i][j] = 0;
@@ -289,9 +289,9 @@ namespace lab2._1
         private byte[] GOST_Kuz_Encript(byte[] blk)
         {
             int i;
-            byte[] out_blk = new byte[BLOCK_SIZE];
+            byte[] out_blk = new byte[_blockSize];
             out_blk = blk;
-            for (i = 0; i < 9; i++)
+            for (i = 0; i < _countFullCycle; i++)
             {
                 out_blk = GOST_Kuz_X(iter_key[i], out_blk);
                 out_blk = GOST_Kuz_S(out_blk);
@@ -305,7 +305,7 @@ namespace lab2._1
         private byte[] GOST_Kuz_Decript(byte[] blk)
         {
             int i;
-            byte[] out_blk = new byte[BLOCK_SIZE];
+            byte[] out_blk = new byte[_blockSize];
             out_blk = blk;
 
             out_blk = GOST_Kuz_X(out_blk, iter_key[9]);
@@ -323,11 +323,11 @@ namespace lab2._1
         // приобразавание ключа из строки в байты
         private void KeyFromStringToByte(out byte[] bKey1, out byte[] bKey2, string masterKey)
         {
-            bKey1 = new byte[16];
-            bKey2 = new byte[16];
+            bKey1 = new byte[_keySize];
+            bKey2 = new byte[_keySize];
 
             byte[] temp = System.Text.Encoding.Default.GetBytes(masterKey);
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < _keySize*2; i++)
             {
                 if (i < _keySize)
                 {
@@ -349,7 +349,7 @@ namespace lab2._1
             
             byte[] temp = System.Text.Encoding.Default.GetBytes(text);
             int countAll = temp.Length;
-            while (countAll % 16 != 0)
+            while (countAll % _blockSize != 0)
             {
                 countAll++;
             }
@@ -380,7 +380,6 @@ namespace lab2._1
             GOST_Kuz_Expand_Key(bKey1, bKey2);
 
             string text = "";
-            //byte[][] bText = SplittingTheText(TextO);
             byte[][] bText = TextFromStringToByte(TextO);
             for (int i = 0; i < bText.Length; i++)
             {
@@ -397,29 +396,18 @@ namespace lab2._1
             // Ключ 
             byte[] bKey1 = new byte[_keySize];
             byte[] bKey2 = new byte[_keySize];
-            KeyFromStringToByte(out bKey1, out bKey2, KeyO);
-            GOST_Kuz_Expand_Key(bKey1, bKey2);
+            KeyFromStringToByte(out bKey1, out bKey2, KeyO); // преобразование ключа из строки в байты
+            GOST_Kuz_Expand_Key(bKey1, bKey2); // Получение первой пары итерационных ключей из мастер-ключа
 
             string text = "";
             byte[][] bText = TextFromStringToByte(TextO);
             for (int i = 0, z=0; i < bText.Length; i++)
             {
-                bText[i] = GOST_Kuz_Encript(bText[i]);
-                //for (int j=0; j<BLOCK_SIZE;j++,z++ )
-                //{
-                //    // Для вывода строки в байтах
-                //    if (z == bText.Length*BLOCK_SIZE-1)
-                //    {
-                //        text += bText[i][j].ToString();
-                //        return text;
-                //    }
-                //    else text +=  bText[i][j].ToString() + " ";
-                //}
-                ////text+= System.Text.Encoding.Default.GetString(bText[i]);
+                bText[i] = GOST_Kuz_Encript(bText[i]); // запуск шифрования
             }
 
-            byte[] b = bText.SelectMany(x => x).ToArray();
-            text = System.Text.Encoding.Default.GetString(b);
+            byte[] b = bText.SelectMany(x => x).ToArray(); // преобразование массива массивов в один массив
+            text = System.Text.Encoding.Default.GetString(b); // преобразование массива байт в строку
             return text;
         }
 
