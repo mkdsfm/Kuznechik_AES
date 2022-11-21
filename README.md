@@ -12,4 +12,5 @@
 данный интерфейс.
 Алгоритмы: Kuznechik, AES 
 
+На данный момент работает только Кузечик. Чтобы добавить AES нужно заменить в App.xaml.cs открытие окна Window2 на Window1
 ### [Теритичская часть алгоритма Кузнечик](https://github.com/Cynigu/Kuznechik_AES/blob/main/Теория.md)
