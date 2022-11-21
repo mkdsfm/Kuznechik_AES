@@ -12,4 +12,4 @@
 данный интерфейс.
 Алгоритмы: Kuznechik, AES 
 
-### [Теритичская часть](https://github.com/Cynigu/Kuznechik_AES/blob/main/Теория.md)
+### [Теритичская часть алгоритма Кузнечик](https://github.com/Cynigu/Kuznechik_AES/blob/main/Теория.md)
