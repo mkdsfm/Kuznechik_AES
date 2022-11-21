@@ -1,10 +1,15 @@
-﻿namespace lab2._1
+﻿using System.Linq;
+
+namespace lab2._1
 {
     public class KuznechikCipher : ICipher
     {
 
         #region Константы
         private const int BLOCK_SIZE = 16; // Размер блока 16 байт (или 128 бит)
+        private const int _keySize = 16;
+        private const int _countFullCycle = 9;
+        private const int _countCycle = 10;
         // таблица прямого нелинейного преобразования
         private readonly byte[] Pi = {
         (byte) 0xFC, (byte) 0xEE, (byte) 0xDD, 0x11, (byte) 0xCF, 0x6E, 0x31, 0x16,
@@ -316,15 +321,15 @@
        
         #region Препобразование string в byte[] и в byte[][]
         // приобразавание ключа из строки в байты
-        private void KeyFromStringToByte(out byte[] bKey1, out byte[] bKey2, string KeyO)
+        private void KeyFromStringToByte(out byte[] bKey1, out byte[] bKey2, string masterKey)
         {
             bKey1 = new byte[16];
             bKey2 = new byte[16];
 
-            byte[] temp = System.Text.Encoding.Default.GetBytes(KeyO);
+            byte[] temp = System.Text.Encoding.Default.GetBytes(masterKey);
             for (int i = 0; i < 32; i++)
             {
-                if (i < 16)
+                if (i < _keySize)
                 {
                     if (i < temp.Length) bKey1[i] = temp[i];
                     else if (i == temp.Length) bKey1[i] = 0x01;
@@ -333,34 +338,12 @@
                 else
                 {
                     if (i < temp.Length) bKey2[i%16] = temp[i];
-                    else if (i == temp.Length) bKey2[i%16] = 0x01;
-                    else bKey2[i%16] = 0x00;
+                    else if (i == temp.Length) bKey2[i% _keySize] = 0x01;
+                    else bKey2[i% _keySize] = 0x00;
                 }
             }
         }
-        private byte[][] TextFromStringOfIntToByte(string text)
-        {
-            string[] temp = text.Split(' ');
-            int countAll = temp.Length;
-            while (countAll % 16 != 0)
-            {
-                countAll++;
-            }
-            int countBlocks = countAll / 16;
-            byte[][] blocks = new byte[countBlocks][];
-            for (int i = 0; i < countBlocks; i++)
-            {
-                blocks[i] = new byte[16];
-                for (int j = i * 16; j < (i + 1) * 16; j++)
-                {
-                    if (j < temp.Length) blocks[i][j % 16] = (byte)int.Parse(temp[j]);
-                    else if (j == temp.Length) blocks[i][j % 16] = 0x01;
-                    else blocks[i][j % 16] = 0x00;
-                }
-            }
 
-            return blocks;
-        }
         private byte[][] TextFromStringToByte(string text)
         {
             
@@ -398,7 +381,7 @@
 
             string text = "";
             //byte[][] bText = SplittingTheText(TextO);
-            byte[][] bText = TextFromStringOfIntToByte(TextO);
+            byte[][] bText = TextFromStringToByte(TextO);
             for (int i = 0; i < bText.Length; i++)
             {
                 bText[i] = GOST_Kuz_Decript(bText[i]);
@@ -412,8 +395,8 @@
         {
             // Используется режим простой замены
             // Ключ 
-            byte[] bKey1 = new byte[16];
-            byte[] bKey2 = new byte[16];
+            byte[] bKey1 = new byte[_keySize];
+            byte[] bKey2 = new byte[_keySize];
             KeyFromStringToByte(out bKey1, out bKey2, KeyO);
             GOST_Kuz_Expand_Key(bKey1, bKey2);
 
@@ -422,18 +405,21 @@
             for (int i = 0, z=0; i < bText.Length; i++)
             {
                 bText[i] = GOST_Kuz_Encript(bText[i]);
-                for (int j=0; j<BLOCK_SIZE;j++,z++ )
-                {
-                    // Для вывода строки в байтах
-                    if (z == bText.Length*BLOCK_SIZE-1)
-                    {
-                        text += bText[i][j].ToString();
-                        return text;
-                    }
-                    else text +=  bText[i][j].ToString() + " ";
-                }
-                //text+= System.Text.Encoding.Default.GetString(bText[i]);
+                //for (int j=0; j<BLOCK_SIZE;j++,z++ )
+                //{
+                //    // Для вывода строки в байтах
+                //    if (z == bText.Length*BLOCK_SIZE-1)
+                //    {
+                //        text += bText[i][j].ToString();
+                //        return text;
+                //    }
+                //    else text +=  bText[i][j].ToString() + " ";
+                //}
+                ////text+= System.Text.Encoding.Default.GetString(bText[i]);
             }
+
+            byte[] b = bText.SelectMany(x => x).ToArray();
+            text = System.Text.Encoding.Default.GetString(b);
             return text;
         }
 
