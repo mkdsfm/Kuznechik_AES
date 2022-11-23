@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace lab2._1
 {
@@ -94,7 +95,13 @@ namespace lab2._1
         #region Math
 
         #region Основные функции (основная математика)
-        // Сложение двух двоичных векторов по модулю 2 (функция Х)
+
+        /// <summary>
+        /// Сложение двух двоичных векторов по модулю 2 (функция Х)
+        /// </summary>
+        /// <param name="a">первый вектор</param>
+        /// <param name="b">второй вектор</param>
+        /// <returns></returns>
         private byte[] GOST_Kuz_X( byte[] a, byte[] b)
         {
             int i;
@@ -121,9 +128,16 @@ namespace lab2._1
             return out_data;
         }
 
-        // Для реализации функции L нам понадобится несколько вспомогательных функций,
-        // одна для расчета умножения чисел в поле Галуа, и одна для сдвига.
-        // умножение в поле Галуа
+
+        /// <summary>
+        /// Умножение в поле Галуа
+        /// </summary>
+        /// <param name="a">1 множитель</param>
+        /// <param name="b">2 множитель</param>
+        /// <returns>Произведение</returns>
+        /// <remarks>Для реализации функции L нам понадобится несколько вспомогательных функций,
+        /// одна для расчета умножения чисел в поле Галуа, и одна для сдвига.
+        /// </remarks>
         private byte GOST_Kuz_GF_mul(byte a, byte b)
         {
             byte c = 0;
@@ -318,52 +332,60 @@ namespace lab2._1
             return out_blk;
         }
         #endregion
-       
+
         #region Препобразование string в byte[] и в byte[][]
-        // приобразавание ключа из строки в байты
+
+        /// <summary>
+        /// Преобразование ключа из строки в байты
+        /// </summary>
+        /// <param name="bKey1">первый ключ из пары</param>
+        /// <param name="bKey2">второй ключ из пры</param>
+        /// <param name="masterKey">исходный ключ</param>
         private void KeyFromStringToByte(out byte[] bKey1, out byte[] bKey2, string masterKey)
         {
             bKey1 = new byte[_keySize];
             bKey2 = new byte[_keySize];
 
-            byte[] temp = System.Text.Encoding.Default.GetBytes(masterKey);
-            for (int i = 0; i < _keySize*2; i++)
+            List<byte> temp = System.Text.Encoding.Default.GetBytes(masterKey).ToList();
+            
+            if (temp.Count < _keySize*2)
             {
-                if (i < _keySize)
+                var countByte = temp.Count; // чтобы добавить 0х01 во второй ключ, если размер ключа меньше 16 байт
+                temp.Add(0x01);
+                temp.AddRange(new byte[_keySize * 2 - temp.Count]); // дополняем нулями, если ключ меньше 32 байт
+                
+                if (countByte < _keySize)
                 {
-                    if (i < temp.Length) bKey1[i] = temp[i];
-                    else if (i == temp.Length) bKey1[i] = 0x01;
-                    else bKey1[i] = (byte)0;
+                    temp[_keySize] = 0x01;
                 }
-                else
-                {
-                    if (i < temp.Length) bKey2[i%16] = temp[i];
-                    else if (i == temp.Length) bKey2[i% _keySize] = 0x01;
-                    else bKey2[i% _keySize] = 0x00;
-                }
+            }
+
+            for (int i = 0; i < _keySize; i++)
+            {
+                bKey1[i] = temp[i];
+                bKey2[i] = temp[i + _keySize];
             }
         }
 
         private byte[][] TextFromStringToByte(string text)
         {
-            
-            byte[] temp = System.Text.Encoding.Default.GetBytes(text);
-            int countAll = temp.Length;
-            while (countAll % _blockSize != 0)
+
+            List<byte> temp = System.Text.Encoding.Default.GetBytes(text).ToList();
+            int countByte = temp.Count;
+            while (temp.Count % _blockSize != 0)
             {
-                countAll++;
+                if (temp.Count == countByte) temp.Add(0x01);
+                else temp.Add(0x00);
             }
-            int countBlocks = countAll / 16;
+            int countBlocks = temp.Count / _blockSize;
             byte[][] blocks = new byte[countBlocks][];
 
             for (int i = 0; i < countBlocks; i++)
             {
-                blocks[i] = new byte[16];
-                for (int j = i*16; j< (i+1)*16; j++)
+                blocks[i] = new byte[_blockSize];
+                for (int j = i*_blockSize; j< (i+1)*_blockSize; j++)
                 {
-                    if (j < temp.Length) blocks[i][j % 16] = temp[j];
-                    else if (j == temp.Length) blocks[i][j%16] = 0x01;
-                    else blocks[i][j%16] = 0x00;
+                    blocks[i][j % _blockSize] = temp[j];
                 }
             }
             return blocks;
@@ -392,7 +414,6 @@ namespace lab2._1
         // Шифрование
         public string Encode(string TextO, string KeyO)
         {
-            // Используется режим простой замены
             // Ключ 
             byte[] bKey1 = new byte[_keySize];
             byte[] bKey2 = new byte[_keySize];
