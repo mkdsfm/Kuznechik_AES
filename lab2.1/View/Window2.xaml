@@ -29,9 +29,7 @@
                         <MenuItem Command="{Binding SaveCommand}"
                         Header="Мини отчет" ></MenuItem>
                         <MenuItem Command="{Binding SaveResultEncodeCommand}"
-                        Header="Результат шифрования" ></MenuItem>
-                        <MenuItem Command="{Binding SaveResultDecodeCommand}"
-                        Header="Результат дешифрования" ></MenuItem>
+                        Header="Результат" ></MenuItem>
                     </MenuItem>
                     <Separator />
                     <MenuItem Command="{Binding OpenWindowInformation}"
